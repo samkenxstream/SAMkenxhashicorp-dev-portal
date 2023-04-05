@@ -2,32 +2,14 @@
 componentName: StandaloneLink
 ---
 
-The `StandaloneLink` component should be used when a link is needed outside of a body of text. See more documentation [the HDS Product Figma](https://www.figma.com/file/noyY6dUMDYjmySpHcMjhkN/?node-id=2365%3A21590).
-
-Internally, this component uses two other components:
-
-- `MaybeInternalLink`: to automatically determine whether or not `next/link` should be used
-- `Text`: to ensure conformance font size and weight with the design system
-
-## Props
+The `StandaloneLink` component should be used when a link is needed outside of a body of text. It is based on the <a href="https://design-system-components-hashicorp.vercel.app/components/link/standalone" target="_blank" rel="noreferrer noopener">HashiCorp Design System (HDS) Link::Standalone component (opens in new tab)</a>.
 
 🚨 Guidance on icon sizes to pass into the `icon` prop:
 
-- If `textSize` is being set to 100 or 200, then size 16 icons are recommended
-- If `textSize` is being set to 300, then size 24 icons are recommended
+- If `size` set to "small" or "medium", then size 16 icons are recommended
+- If `size` set to "large", then size 24 icons are recommended
 
-| Prop name      | Description                                                                                                                             | Required? | Default value | Type                                   |
-| -------------- | --------------------------------------------------------------------------------------------------------------------------------------- | --------- | ------------- | -------------------------------------- |
-| `ariaLabel`    | A non-visible label presented by screen readers. Passed directly to the internal link element as the `aria-label` prop.                 | No        | undefined     | string                                 |
-| `className`    | A string of one or more class names. Applied last to the rendered `<a>` element.                                                        | No        | undefined     | string                                 |
-| `color`        | Determines the set of colors to use for various states of the component.                                                                | No        | 'primary'     | Either: 'primary' or 'secondary'       |
-| `download`     | Same as the `<a>` element's download prop. Passed directly to the internal link element.                                                | No        | undefined     | Either as boolean or with string value |
-| `href`         | The destination of the link.                                                                                                            | Yes       | N/A           | string                                 |
-| `icon`         | An icon from `@hashicorp/flight-icons` to render.                                                                                       | Yes       | N/A           | ReactElement                           |
-| `iconPosition` | Where the icon should be rendered within the link. See examples below.                                                                  | Yes       | N/A           | Either: 'leading' or 'trailing'        |
-| `openInNewTab` | Whether or not the link should open in a new tab. Affects the `target` and `rel` props passed to the internally rendered `<a>` element. | No        | false         | boolean                                |
-| `text`         | The text rendered within the `<a>` element.                                                                                             | Yes       | N/A           | string                                 |
-| `textSize`     | The `size` passed to the inner `Text` component.                                                                                        | No        | undefined     | TextProps[`size`]                      |
+See `StandaloneLink`'s <a href="https://github.com/hashicorp/dev-portal/blob/main/src/components/standalone-link/types.ts" target="_blank" rel="noreferrer noopener">types.ts file (opens in new tab)</a> for more details on the props this component exposes.
 
 ## Examples
 
@@ -37,42 +19,47 @@ These examples show a `SwingsetTestIcon` that is used for the purpose of renderi
 import { IconArrowRight16 } from '@hashicorp/flight-icons/svg-react/arrow-right-16'
 
 const MyComponent = () => {
-  return (
-    <StandaloneLink
-      href="/"
-      icon={<IconArrowRight16 />}
-      iconPosition="trailing"
-      text="Get Started"
-    />
-  )
+	return (
+		<StandaloneLink
+			href="/"
+			icon={<IconArrowRight16 />}
+			iconPosition="trailing"
+			text="Get Started"
+		/>
+	)
 }
 ```
 
 ### With a trailing icon
 
-<LiveComponent>{`
+<LiveComponent>
+{`
 <StandaloneLink
   href="/"
   icon={<SwingsetTestIcon name="arrow-right" />}
   iconPosition="trailing"
   text="Get Started"
 />
-`}</LiveComponent>
+`}
+</LiveComponent>
 
 ### With a leading icon
 
-<LiveComponent>{`
+<LiveComponent>
+{`
 <StandaloneLink
   href="/"
   icon={<SwingsetTestIcon name="github" />}
   iconPosition="leading"
   text="Edit this page on GitHub"
 />
-`}</LiveComponent>
+`}
+</LiveComponent>
 
 ### With color set to secondary
 
-<LiveComponent>{`
+<LiveComponent>
+{`
 <StandaloneLink
   color="secondary"
   href="/"
@@ -80,33 +67,36 @@ const MyComponent = () => {
   iconPosition="trailing"
   text="Get Started"
 />
-`}</LiveComponent>
+`}
+</LiveComponent>
 
-### With varying textSize values
+### With varying size values
 
-<LiveComponent>{`
+<LiveComponent>
+{`
 <>
   <StandaloneLink
     href="/"
     icon={<SwingsetTestIcon name="arrow-right" />}
     iconPosition="trailing"
+    size="small"
     text="Get Started"
-    textSize={100}
   />
   <StandaloneLink
     href="/"
     icon={<SwingsetTestIcon name="arrow-right" />}
     iconPosition="trailing"
+    size="medium"
     text="Get Started"
-    textSize={200}
   />
-  {/* Reminder: It's important to use size 24 icons when textSize is 300 */}
+  {/* Reminder: It's important to use size 24 icons when size is "large" */}
   <StandaloneLink
     href="/"
     icon={<SwingsetTestIcon name="arrow-right" size={24} />}
     iconPosition="trailing"
+    size="large"
     text="Get Started"
-    textSize={300}
   />
 </>
-`}</LiveComponent>
+`}
+</LiveComponent>

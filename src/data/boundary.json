@@ -1,112 +1,73 @@
 {
-  "name": "Boundary",
-  "slug": "boundary",
-  "algoliaConfig": {
-    "indexName": "product_BOUNDARY",
-    "searchOnlyApiKey": "8308498decdf72e11590fc6356e5fdde"
-  },
-  "analyticsConfig": {
-    "includedDomains": "boundaryproject.io www.boundaryproject.io",
-    "segmentWriteKey": "JkNZiSgwVRAAFrkqqdHLxf0xfcZuhYYc"
-  },
-  "metadata": {
-    "title": "Boundary by HashiCorp",
-    "description": "Boundary is an open source solution that automates a secure identity-based user access to hosts and services across environments.",
-    "image": "/boundary/img/og-image.png",
-    "icon": [
-      {
-        "href": "/boundary/_favicon.ico"
-      }
-    ]
-  },
-  "alertBannerActive": true,
-  "alertBanner": {
-    "tag": "Thank you",
-    "url": "https://hashiconf.com/europe",
-    "text": "HashiConf Europe is a wrap. Watch this year’s sessions on-demand.",
-    "linkText": "Watch Now",
-    "expirationDate": "2021-06-20T12:00:00-07:00"
-  },
-  "subnavItems": [
-    {
-      "text": "Overview",
-      "url": "/",
-      "type": "inbound"
-    },
-    "divider",
-    {
-      "text": "Tutorials",
-      "url": "https://learn.hashicorp.com/boundary",
-      "type": "inbound"
-    },
-    {
-      "text": "Docs",
-      "url": "/docs",
-      "type": "inbound"
-    },
-    {
-      "text": "API",
-      "url": "/api-docs",
-      "type": "inbound"
-    },
-    {
-      "text": "Community",
-      "url": "/community",
-      "type": "inbound"
-    }
-  ],
-  "basePaths": ["docs", "api-docs"],
-  "sidebar": {
-    "landingPageNavData": [
-      {
-        "title": "Introduction",
-        "fullPath": "/boundary/docs/what-is-boundary"
-      },
-      {
-        "title": "Getting Started",
-        "fullPath": "/boundary/docs/getting-started"
-      }
-    ],
-    "resourcesNavData": [
-      { "heading": "Resources" },
-      {
-        "title": "Releases",
-        "href": "https://releases.hashicorp.com/boundary/"
-      },
-      {
-        "title": "HashiCorp Learn",
-        "href": "https://learn.hashicorp.com/boundary"
-      },
-      {
-        "title": "Community Forum",
-        "href": "https://discuss.hashicorp.com/c/boundary"
-      },
-      {
-        "title": "Support",
-        "href": "https://support.hashicorp.com"
-      }
-    ]
-  },
-  "navigationHeaderItems": [
-    {
-      "label": "Overview",
-      "path": "/boundary",
-      "id": "overview"
-    },
-    {
-      "label": "Docs",
-      "path": "/boundary/docs",
-      "id": "docs"
-    },
-    {
-      "label": "API",
-      "path": "/boundary/api-docs",
-      "id": "api-docs"
-    },
-    {
-      "label": "Install",
-      "path": "/boundary/downloads",
-      "id": "downloads"
-    }
-  ]
+	"name": "Boundary",
+	"slug": "boundary",
+	"algoliaConfig": {
+		"indexName": "product_BOUNDARY",
+		"searchOnlyApiKey": "8308498decdf72e11590fc6356e5fdde"
+	},
+	"analyticsConfig": {
+		"includedDomains": "boundaryproject.io www.boundaryproject.io",
+		"segmentWriteKey": "JkNZiSgwVRAAFrkqqdHLxf0xfcZuhYYc"
+	},
+	"datoToken": "88b4984480dad56295a8aadae6caad",
+	"metadata": {
+		"title": "Boundary by HashiCorp",
+		"description": "Boundary is an open source solution that automates a secure identity-based user access to hosts and services across environments.",
+		"image": "https://www.boundaryproject.io/boundary-public/img/og-image.png",
+		"icon": [
+			{
+				"href": "/boundary-public/_favicon.ico"
+			}
+		]
+	},
+	"alertBannerActive": true,
+	"alertBanner": {
+		"tag": "HashiConf",
+		"url": "https://hashiconf.com/2023?utm_source=direct&utm_medium=banner&utm_campaign=23Q3_HASHICONFGLOBAL_EVENT&utm_content=&utm_offer=event",
+		"text": "Our community conference is taking place in San Francisco and online October 10-12.",
+		"linkText": "Register now",
+		"expirationDate": ""
+	},
+	"subnavItems": [
+		{
+			"text": "Overview",
+			"url": "/",
+			"type": "inbound"
+		},
+		"divider",
+		{
+			"text": "Tutorials",
+			"url": "https://developer.hashicorp.com/boundary/tutorials",
+			"type": "inbound"
+		},
+		{
+			"text": "Docs",
+			"url": "/docs",
+			"type": "inbound"
+		},
+		{
+			"text": "API",
+			"url": "/api-docs",
+			"type": "inbound"
+		},
+		{
+			"text": "Community",
+			"url": "/community",
+			"type": "inbound"
+		}
+	],
+	"basePaths": ["docs", "api-docs", "downloads"],
+	"rootDocsPaths": [
+		{
+			"iconName": "docs",
+			"name": "Documentation",
+			"path": "docs",
+			"shortName": "Docs"
+		},
+		{
+			"iconName": "api",
+			"name": "API",
+			"path": "api-docs"
+		}
+	]
 }

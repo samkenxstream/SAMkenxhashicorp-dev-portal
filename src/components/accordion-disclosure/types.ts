@@ -1,37 +1,48 @@
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
 import { ReactNode } from 'react'
+import { DisclosureProps } from 'components/disclosure'
 
 export interface AccordionDisclosureProps {
-  /**
-   * The disclosed content to render within the `AccordionDisclosure` container.
-   * This will only show when the `AccordionDisclosure` is open.
-   */
-  children: ReactNode
+	/**
+	 * The disclosed content to render within the `AccordionDisclosure` container.
+	 * This will only show when the `AccordionDisclosure` is open.
+	 */
+	children: ReactNode
 
-  /**
-   * Secondary label text that renders below the main `title` with less
-   * emphasis. Always shows regardless of the `AccordionDisclosure`'s
-   * open/closed state.
-   */
-  description?: string
+	/**
+	 * Secondary label text that renders below the main `title` with less
+	 * emphasis. Always shows regardless of the `AccordionDisclosure`'s
+	 * open/closed state.
+	 */
+	description?: ReactNode
 
-  /**
-   * The `id` passed to the root container. Used to generate an `id` for the
-   * content container which is also passed to `aria-controls` on the
-   * `AccordionDisclosure` activator button.
-   */
-  id: string
+	/**
+	 * Optional prop that that enables a `AccordionDisclosure` to be rendered open
+	 * on initial load.
+	 */
+	initialOpen?: DisclosureProps['initialOpen']
 
-  /**
-   * Optional prop that that enables a `AccordionDisclosure` to be open on
-   * render.
-   */
-  open?: boolean
+	/**
+	 * The main text label that always shows regardless of the
+	 * `AccordionDisclosure`'s open/closed state. These should be descriptive of
+	 * the disclosed content; labels like "Section 1" or "Section 2" is not very
+	 * descriptive.
+	 */
+	title: ReactNode
 
-  /**
-   * The main text label that always shows regardless of the
-   * `AccordionDisclosure`'s open/closed state. These should be descriptive of
-   * the disclosed content; labels like "Section 1" or "Section 2" is not very
-   * descriptive.
-   */
-  title: string
+	/**
+	 * Optional prop to signal that this AccordionDisclosure is being
+	 * placed in a group next to adjacent AccordionDisclosure components.
+	 * We use this to control styling.
+	 */
+	groupData?: {
+		/* The number of items in the group */
+		numItems: number
+		/* The index of this specific AccordionDisclosure in the group */
+		currentIndex: number
+	}
 }

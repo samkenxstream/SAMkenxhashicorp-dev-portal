@@ -1,73 +1,121 @@
-.navigationHeader {
-  background-color: var(--token-color-palette-neutral-700);
-  color: var(--token-color-palette-neutral-0);
-  height: var(--navigation-header-height);
-  padding: 20px 24px;
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
+ */
 
-  & nav {
-    align-items: center;
-    display: flex;
-    justify-content: space-between;
-  }
+/*
+***
+* Class for the main container.
+***
+* Note: `min-height` is needed on the home page because the
+* `NavigationHeaderDropdownMenu` buttons that are intended to make the header
+* grow are only inside of the absolutely positioned `nav` element. On the
+* product pages, the main menu is a `NavigationHeaderDropdownMenu` button
+* located inside of an element that's not absolutely positioned.
+***
+*/
+.root {
+	--header-padding-left-right: 24px;
+	--header-menu-item-padding-left-right: 12px;
+
+	background-color: var(--token-color-palette-neutral-700);
+	display: flex;
+	padding-top: 0;
+	padding-bottom: 0;
+	min-height: var(--navigation-header-height);
+	justify-content: space-between;
+	padding-left: var(--header-padding-left-right);
+	padding-right: var(--header-padding-left-right);
+	position: relative;
+	width: 100%;
+
+	@media (--dev-dot-show-mobile-menu) {
+		padding-bottom: 14px;
+		padding-top: 14px;
+	}
+
+	@nest html[data-theme='dark'] & {
+		background-color: var(--token-color-surface-faint);
+	}
 }
 
-.headerLeft,
-.headerRight {
-  align-items: center;
-  display: flex;
+.leftSide {
+	align-items: center;
+	display: flex;
+	justify-content: left;
+	gap: 24px;
 }
 
-.siteLogo {
-  display: flex;
-  margin-right: 12px;
-
-  & svg {
-    height: 40px;
-    width: 40px;
-  }
+.rightSide {
+	align-items: center;
+	display: flex;
+	justify-content: right;
+	gap: 12px;
 }
 
-.navLinks {
-  align-items: center;
-  display: flex;
-  list-style: none;
-  margin-bottom: 0;
-  margin-left: 0;
-  margin-right: 72px;
-  margin-top: 0;
+.mobileMenuButton {
+	align-items: center;
+	background-color: transparent;
+	border-radius: 5px;
+	border: 1px solid transparent;
+	color: var(--token-color-foreground-high-contrast);
+	display: flex;
+	justify-content: center;
+	padding: 5px;
+
+	&:hover {
+		border: 1px solid var(--token-color-palette-neutral-200);
+	}
+
+	@media (--dev-dot-hide-mobile-menu) {
+		display: none;
+	}
+
+	@nest html[data-theme='dark'] & {
+		color: var(--token-color-foreground-strong);
+
+		&:hover {
+			border: 1px solid var(--token-color-border-strong);
+		}
+	}
 }
 
-.navLinksListItem {
-  padding: 4px;
+.authenticationControls {
+	/* properties */
+	align-items: center;
+	display: flex;
+	gap: 16px;
+
+	@media (--dev-dot-show-mobile-menu) {
+		display: none;
+	}
 }
 
-/* TODO: use `calc` and variables so it's clearer why we're using odd padding values */
-.navLinksAnchor {
-  composes: g-focus-border-and-box-shadow-dark from global;
-  border: 1px solid transparent;
-  border-radius: 5px;
-  color: var(--token-color-palette-neutral-400);
-  display: block;
-  font-size: 14px;
-  font-weight: 500;
-  line-height: 20px;
-  padding: 3px 8px;
+.signUpLink {
+	color: var(--token-color-foreground-high-contrast);
 
-  /* Only enable animation if query is supported and value is no-preference */
-  @media (prefers-reduced-motion: no-preference) {
-    transition: color 0.1s;
-  }
+	&:hover {
+		color: var(--token-color-foreground-high-contrast);
+	}
+}
 
-  &:hover {
-    color: var(--token-color-palette-neutral-300);
-  }
+.userDropdownDisclosureActivator {
+	/* composition */
+	composes: g-focus-ring-from-box-shadow-dark from global;
 
-  /* TODO: replace colors w/ tokens when available */
-  &:focus {
-    color: var(--token-color-palette-neutral-300);
-  }
+	/* properties */
+	background-color: transparent;
+	color: var(--token-color-foreground-high-contrast);
 
-  &[aria-current='page'] {
-    color: var(--token-color-palette-neutral-100);
-  }
+	&:hover {
+		border-color: var(--token-color-palette-neutral-200);
+	}
+
+	@nest html[data-theme='dark'] & {
+		color: var(--token-color-foreground-strong);
+
+		&:hover {
+			border-color: var(--token-color-border-strong);
+		}
+	}
 }

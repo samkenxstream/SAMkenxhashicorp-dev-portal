@@ -1,79 +1,75 @@
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
 import { ReactElement } from 'react'
-import { TextProps } from 'components/text'
+import { LinkProps } from 'components/link'
 
-export interface StandaloneLinkProps {
-  /**
-   * A non-visible label presented by screen readers. Passed directly to the
-   * internal link element as the `aria-label` prop.
-   *
-   * ref: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label
-   */
-  ariaLabel?: string
+type InheritedLinkProps = Pick<
+	LinkProps,
+	'className' | 'download' | 'href' | 'onClick' | 'opensInNewTab'
+>
 
-  /**
-   * A string of one or more class names. Applied last to the rendered `<a>`
-   * element.
-   */
-  className?: string
+export interface StandaloneLinkProps extends InheritedLinkProps {
+	/**
+	 * A non-visible label presented by screen readers. Passed directly to the
+	 * internal link element as the `aria-label` prop.
+	 *
+	 * ref: https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label
+	 */
+	ariaLabel?: LinkProps['aria-label']
 
-  /**
-   * Determines the set of colors to use for various states of the component.
-   */
-  color?: 'primary' | 'secondary'
+	/**
+	 * Determines the set of colors to use for various states of the component.
+	 */
+	color?: 'primary' | 'secondary'
 
-  /**
-   * Same as the <a> element's download prop. Passed directly to the internal
-   * link element.
-   *
-   * ref: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/a#attr-download
-   */
-  download?: boolean | string
+	/**
+	 * A data-heap-track string to add to the <a /> element.
+	 */
+	'data-heap-track'?: string
 
-  /**
-   * The destination of the link.
-   */
-  href: string
+	/**
+	 * An icon from `@hashicorp/flight-icons` to render.
+	 *
+	 * Example:
+	 *
+	 * ```jsx
+	 * import { IconArrowRight16 } from '@hashicorp/flight-icons/svg-react/arrow-right-16'
+	 *
+	 * const MyComponent = () => {
+	 *  return (
+	 *    <StandaloneLink
+	 *      href="/"
+	 *      icon={<IconArrowRight16 />}
+	 *      iconPosition="trailing"
+	 *      text="Get Started"
+	 *    />
+	 *  )
+	 * }
+	 * ```
+	 */
+	icon: ReactElement
 
-  /**
-   * An icon from `@hashicorp/flight-icons` to render.
-   *
-   * Example:
-   *
-   * ```jsx
-   * import { IconArrowRight16 } from '@hashicorp/flight-icons/svg-react/arrow-right-16'
-   *
-   * const MyComponent = () => {
-   *  return (
-   *    <StandaloneLink
-   *      href="/"
-   *      icon={<IconArrowRight16 />}
-   *      iconPosition="trailing"
-   *      text="Get Started"
-   *    />
-   *  )
-   * }
-   * ```
-   */
-  icon: ReactElement
+	/**
+	 * Where the icon should be rendered within the link.
+	 */
+	iconPosition: 'leading' | 'trailing'
 
-  /**
-   * Where the icon should be rendered within the link.
-   */
-  iconPosition: 'leading' | 'trailing'
+	/**
+	 * The size of the rendered link, which mainly affects the font-size and
+	 * line-height CSS properties.
+	 */
+	size?: 'small' | 'medium' | 'large'
 
-  /**
-   * Whether or not the link should open in a new tab. Affects the `target` and
-   * `rel` props passed to the internally rendered `<a>` element.
-   */
-  openInNewTab?: boolean
+	/**
+	 * The text rendered within the `<a>` element.
+	 */
+	text: string
 
-  /**
-   * The text rendered within the `<a>` element.
-   */
-  text: string
-
-  /**
-   * The `size` passed to the inner `Text` component.
-   */
-  textSize?: TextProps['size']
+	/**
+	 * Optional className to apply to `text`'s wrapper element.
+	 */
+	textClassName?: string
 }

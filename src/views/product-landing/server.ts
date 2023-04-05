@@ -1,112 +1,84 @@
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+import { GetStaticPropsResult } from 'next'
 import fs from 'fs'
 import path from 'path'
-import slugify from 'slugify'
 import { ProductData } from 'types/products'
+import { stripUndefinedProperties } from 'lib/strip-undefined-props'
+import { validateAgainstSchema } from 'lib/validate-against-schema'
+import {
+	generateProductLandingSidebarNavData,
+	generateTopLevelSidebarNavData,
+} from 'components/sidebar/helpers'
+import { ProductLandingContent, ProductLandingContentSchema } from './schema'
+import { transformRawContentToProp, extractHeadings } from './helpers'
+import { ProductLandingViewProps } from './types'
+import outlineItemsFromHeadings from 'components/outline-nav/utils/outline-items-from-headings'
 
-async function generateStaticProps({
-  product,
-  contentJsonFile,
-}: {
-  product: ProductData
-  contentJsonFile: string
-}): Promise<$TSFixMe> {
-  // TODO: need to discuss from whence we should
-  // TODO: source content down the road. For now,
-  // TODO: sourcing from JSON for demo purposes.
-  // Asana task: https://app.asana.com/0/1100423001970639/1201631159784193/f
-  const jsonFilePath = path.join(process.cwd(), contentJsonFile)
-  const CONTENT = JSON.parse(fs.readFileSync(jsonFilePath, 'utf8')) as $TSFixMe
+const generateGetStaticProps = (product: ProductData) => {
+	return async (): Promise<GetStaticPropsResult<ProductLandingViewProps>> => {
+		/**
+		 * Note: could consider other content sources. For now, JSON.
+		 * Asana task: https://app.asana.com/0/1100423001970639/1201631159784193/f
+		 */
+		const jsonFilePath = path.join(
+			process.cwd(),
+			`src/content/${product.slug}/product-landing.json`
+		)
+		const CONTENT = JSON.parse(fs.readFileSync(jsonFilePath, 'utf8'))
 
-  // TODO: Content blocks content should likely
-  // TODO: be fetched dynamically, currently things
-  // TODO: like the title and description of docs pages
-  // TODO: are hard-coded alongside the URL to link to.
-  // TODO: Should be possible to fetch the title and description
-  // TODO: at build time from said URL, to ensure the displayed
-  // TODO: content is accurate, while not needing to be
-  // TODO: manually kept up to date?
-  // Asana task: https://app.asana.com/0/1201010428539925/1201646299837754/f
-  const usedHeadings = []
-  CONTENT.blocks = CONTENT.blocks.map((block) => {
-    switch (block.type) {
-      case 'heading':
-        // augment heading blocks with a consistent slug,
-        // used for anchor linking
-        // if the resulting slug is not unique, append an
-        // integer suffix to make sure that it is
-        // eslint-disable-next-line no-case-declarations
-        const baseSlug = slugify(block.heading, { lower: true })
-        // eslint-disable-next-line no-case-declarations
-        let slug = baseSlug
-        // eslint-disable-next-line no-case-declarations
-        let slugMakeUniquePrefix = 0
-        while (usedHeadings.indexOf(slug) !== -1) {
-          slugMakeUniquePrefix++
-          slug = `${baseSlug}-${slugMakeUniquePrefix}`
-        }
-        usedHeadings.push(slug)
-        return { ...block, slug }
-      case 'cards':
-        // TODO: instead of the below, should likely use product context
-        // TODO: in IconTile for default brandColor (rather than current
-        // TODO: behavior of static default to "neutral"). Would eliminate
-        // TODO: the need to add iconBrandColor to cards (unless doing so
-        // TODO: as an explicit override).
-        // ensure cards with icons have an iconBrandColor,
-        // falling back to the current product if not set
-        /* eslint-disable-next-line no-case-declarations */
-        let defaultIconColor
-        if (product.slug === 'hcp' || product.slug === 'sentinel') {
-          defaultIconColor = 'neutral'
-        } else {
-          defaultIconColor = product.slug
-        }
-        return {
-          ...block,
-          cards: block.cards.map((card) => ({
-            ...card,
-            iconBrandColor: card.iconBrandColor || defaultIconColor,
-          })),
-        }
-      default:
-        return block
-    }
-  })
+		/**
+		 * Validate that CONTENT matches our schema. This includes a type guard,
+		 * which asserts that CONTENT is ProductLandingContent.
+		 */
+		validateAgainstSchema<ProductLandingContent>(
+			CONTENT,
+			ProductLandingContentSchema,
+			jsonFilePath
+		)
 
-  const navData = [
-    ...product.sidebar.landingPageNavData,
-    { divider: true },
-    ...product.sidebar.resourcesNavData,
-  ]
+		/**
+		 * Transform content to props.
+		 * This includes filling in inline tutorials and collection content.
+		 */
+		const content = await transformRawContentToProp(CONTENT, product)
 
-  return {
-    content: CONTENT,
-    layoutProps: {
-      headings: CONTENT.blocks
-        .filter((s) => s.type == 'heading')
-        .map(({ heading, slug, level }) => ({
-          title: heading,
-          slug: slug,
-          level,
-        })),
-      breadcrumbLinks: [
-        { title: 'Developer', url: '/' },
-        { title: product.name, url: `/${product.slug}` },
-      ],
-      sidebarProps: {
-        backToLinkProps: {
-          text: 'Back to Developer',
-          url: '/',
-        },
-        menuItems: navData,
-        showFilterInput: false,
-        title: product.name,
-      },
-    },
-    product,
-  }
+		/**
+		 * Gather up our static props
+		 */
+		const props = stripUndefinedProperties({
+			content,
+			product,
+			outlineItems: outlineItemsFromHeadings(extractHeadings(content)),
+			layoutProps: {
+				breadcrumbLinks: [
+					{ title: 'Developer', url: '/' },
+					{ title: product.name, url: `/${product.slug}`, isCurrentPage: true },
+				],
+				/**
+				 * @TODO remove casting to `any` (used $TSFixMe here for visibility).
+				 * This requires refactoring both `generateTopLevelSidebarNavData` and
+				 * `generateProductLandingSidebarNavData` to set up `menuItems` with the
+				 * correct types.
+				 *
+				 * Task:
+				 * https://app.asana.com/0/1202097197789424/1202405210286689/f
+				 */
+				sidebarNavDataLevels: [
+					generateTopLevelSidebarNavData(product.name),
+					generateProductLandingSidebarNavData(product),
+				] as $TSFixMe,
+			},
+		})
+
+		return {
+			props,
+			revalidate: false,
+		}
+	}
 }
 
-export { generateStaticProps }
-// eslint-disable-next-line import/no-anonymous-default-export
-export default { generateStaticProps }
+export { generateGetStaticProps }

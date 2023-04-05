@@ -1,34 +1,32 @@
-import { ReactElement } from 'react'
-import { GetStaticProps } from 'next'
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+import CalloutCard from 'components/callout-card'
 import vagrantData from 'data/vagrant.json'
-import installData from 'data/vagrant-install.json'
 import { ProductData } from 'types/products'
-import { generateStaticProps, GeneratedProps } from 'lib/fetch-release-data'
-import CoreDevDotLayout from 'layouts/core-dev-dot-layout'
 import ProductDownloadsView from 'views/product-downloads-view'
-import PlaceholderDownloadsView from 'views/placeholder-product-downloads-view'
+import { generateGetStaticProps } from 'views/product-downloads-view/server'
+import { ProductDownloadsViewProps } from 'views/product-downloads-view/types'
 
-const VagrantDownloadsPage = (props: GeneratedProps): ReactElement => {
-  if (__config.flags.enable_new_downloads_view) {
-    const { latestVersion, releases } = props
-    return (
-      <ProductDownloadsView
-        latestVersion={latestVersion}
-        pageContent={installData}
-        releases={releases}
-      />
-    )
-  } else {
-    return <PlaceholderDownloadsView />
-  }
+function VagrantDownloadsPage(props: ProductDownloadsViewProps) {
+	return (
+		<ProductDownloadsView
+			{...props}
+			merchandisingSlot={
+				<CalloutCard
+					heading="VMware Utility"
+					headingSlug="vmware-utility"
+					body="From this page you can download the VMware utility, review lease information and much more. These tools are maintained by HashiCorp and the Vagrant Community."
+					ctas={[{ text: 'Download', url: '/vagrant/downloads/vmware' }]}
+				/>
+			}
+		/>
+	)
 }
 
-export const getStaticProps: GetStaticProps = async () => {
-  const product = vagrantData as ProductData
+const getStaticProps = generateGetStaticProps(vagrantData as ProductData)
 
-  return generateStaticProps(product)
-}
-
-VagrantDownloadsPage.layout = CoreDevDotLayout
-
+export { getStaticProps }
 export default VagrantDownloadsPage

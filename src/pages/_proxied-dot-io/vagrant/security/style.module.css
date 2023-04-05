@@ -1,5 +1,10 @@
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
 .root {
-  composes: g-grid-container from global;
-  max-width: 950px;
-  margin-top: 90px;
+	composes: g-grid-container from global;
+	max-width: 950px;
+	margin-top: 90px;
 }

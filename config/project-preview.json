@@ -1,6 +1,16 @@
 {
-  "io_sites": {
-    "max_static_paths": 9999,
-    "revalidate": 360
-  }
+	"extends": "base",
+	"dev_dot": {
+		"max_static_paths": 9999,
+		"revalidate": false
+	},
+	"io_sites": {
+		"max_static_paths": 9999
+	},
+	"learn": {
+		"max_static_paths": 0
+	},
+	"flags": {
+		"enable_dark_mode": false
+	}
 }

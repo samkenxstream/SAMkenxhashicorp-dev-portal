@@ -1,32 +1,30 @@
-import codeBlockPrimitives from '@hashicorp/react-code-block/mdx'
-import Tabs, { Tab } from 'components/tabs' // @TODO note that this doesn't support groups yet
-import ImageConfig from 'components/image-config'
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+// Global imports
+import AccordionDisclosure from 'components/accordion-disclosure'
 import Image from 'components/image'
+import InteractiveLabCallout from 'components/interactive-lab-callout'
 import VideoEmbed from 'components/video-embed'
 
 /**
- * @TODO move over these components from learn, update to new spec
- *
- * import Accordion from 'components/accordion'
- * import VideoEmbed from 'components/video-embed'
- * import ImageConfig from 'components/image-config'
- * import InteractiveLabCallout from 'components/lab-callout'
+ * @TODO
+ *   - deprecate string option for collapse
+ *   - warn that collapse is `true` by default now?
+ *   - pass classname with a margin-top setting for when there are multiple?
  */
-
-const { CodeBlockConfig, CodeTabs, pre } = codeBlockPrimitives({
-  theme: 'dark',
-})
+const AccordionWrapper = ({ children, collapse, heading }) => {
+	return <AccordionDisclosure title={heading}>{children}</AccordionDisclosure>
+}
 
 //  these components are automatically imported into scope within MDX content
 const MDX_COMPONENTS = {
-  Tabs,
-  Tab,
-  pre,
-  CodeBlockConfig,
-  CodeTabs,
-  ImageConfig,
-  img: Image,
-  VideoEmbed,
+	Accordion: AccordionWrapper,
+	InteractiveLabCallout,
+	img: Image,
+	VideoEmbed,
 }
 
 export default MDX_COMPONENTS

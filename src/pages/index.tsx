@@ -1,27 +1,15 @@
-import { ReactElement } from 'react'
-import BaseNewLayout from 'layouts/base-new'
-import Heading from 'components/heading'
-import HomepageHero from 'components/homepage-hero'
-import ProductCardGrid from 'components/product-card-grid'
-import s from './index.module.css'
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
+ */
 
-function Homepage(): ReactElement {
-  return (
-    <div className={s.root}>
-      <HomepageHero className={s.hero} />
-      <Heading
-        className={s.cardGridHeading}
-        level={2}
-        size={400}
-        slug="explore-product-documentation"
-        weight="bold"
-      >
-        Explore Product Documentation
-      </Heading>
-      <ProductCardGrid className={s.cardGrid} />
-    </div>
-  )
+import { GetStaticProps } from 'next'
+import HomePageView from 'views/homepage'
+import { generateStaticProps } from 'views/homepage/server'
+
+export const getStaticProps: GetStaticProps = async () => {
+	const contentJsonFile = 'src/content/home-page.json'
+	return generateStaticProps(contentJsonFile)
 }
 
-Homepage.layout = BaseNewLayout
-export default Homepage
+export default HomePageView

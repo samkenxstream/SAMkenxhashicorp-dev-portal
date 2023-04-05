@@ -1,9 +1,14 @@
-.root {
-  composes: g-grid-container from global;
-  margin-top: 72px;
-  margin-bottom: 72px;
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
+ */
 
-  & :global(.g-section-header) {
-    margin-bottom: 100px;
-  }
+.root {
+	composes: g-grid-container from global;
+	margin-top: 72px;
+	margin-bottom: 72px;
+
+	& :global(.g-section-header) {
+		margin-bottom: 100px;
+	}
 }

@@ -1,46 +1,45 @@
-import { getCollectionSlug } from 'views/collection-view/helpers'
-import CardLink from 'components/card-link'
-import { Collection as ClientCollection } from 'lib/learn-client/types'
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
+ */
 
-interface FeaturedInCollectionsProps {
-  collections: CollectionCardProps[]
-}
+import {
+	CollectionCardPropsWithId,
+	CollectionCardWithAuthElements,
+} from 'components/collection-card'
+import { FeaturedInCollectionsProps } from './types'
+import s from './featured-in-collections.module.css'
+import CardsGridList from 'components/cards-grid-list'
 
-// @TODO move this to the collection card component file when we make it
-export interface CollectionCardProps
-  extends Pick<
-    ClientCollection,
-    'id' | 'name' | 'slug' | 'theme' | 'description'
-  > {
-  numTutorials: number
-}
-
-// This should render the eventual `CollectionCard` component (doesn't exist yet)
-// which will be used on many other views
+/**
+ * For tutorials that appear in multiple collections,
+ * renders collection cards to link to those collections.
+ */
 export function FeaturedInCollections({
-  collections,
+	className,
+	collections,
 }: FeaturedInCollectionsProps): React.ReactElement {
-  if (collections.length === 0) {
-    return null
-  }
+	if (collections.length === 0) {
+		return null
+	}
 
-  return (
-    <>
-      <h2>Featured Collections</h2>
-      <ul>
-        {collections.map((c) => {
-          return (
-            <li key={c.id}>
-              <CardLink href={getCollectionSlug(c.slug)}>
-                <span>{c.numTutorials} Tutorials</span>
-                <h3>{c.name}</h3>
-                <p>{c.description}</p>
-                <p>{c.theme} Logo</p>
-              </CardLink>
-            </li>
-          )
-        })}
-      </ul>
-    </>
-  )
+	return (
+		<div className={className}>
+			<h2 className={s.heading}>This tutorial also appears in:</h2>
+			<div className={s.cards}>
+				<CardsGridList fixedColumns={collections.length == 1 ? 2 : null}>
+					{collections.map((cardPropsWithId: CollectionCardPropsWithId) => {
+						return (
+							<CollectionCardWithAuthElements
+								key={cardPropsWithId.id}
+								{...cardPropsWithId}
+							/>
+						)
+					})}
+				</CardsGridList>
+			</div>
+		</div>
+	)
 }
+
+export default FeaturedInCollections

@@ -1,28 +1,35 @@
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+import { LinkProps } from 'components/link'
 import { TextProps } from 'components/text'
 
-export interface InlineLinkProps {
-  /**
-   * A string of one or more class names. Applied last to the rendered `<a>` element.
-   */
-  className?: string
+export interface InlineLinkProps extends LinkProps {
+	/**
+	 * The content to render within the `<a>` element.
+	 */
+	children: LinkProps['children']
 
-  /**
-   * The destination of the link.
-   */
-  href: string
+	/**
+	 * A string of one or more class names. Applied last to the rendered `<a>`
+	 * element.
+	 */
+	className?: LinkProps['className']
 
-  /**
-   * The text rendered within the `<a>` element.
-   */
-  text: string
+	/**
+	 * The destination of the link.
+	 */
+	href: LinkProps['href']
 
-  /**
-   * The `size` passed to the inner `Text` component.
-   */
-  textSize?: TextProps['size']
+	/**
+	 * The `size` used to apply a `hds-typography-body-` CSS helper class.
+	 */
+	textSize?: TextProps['size']
 
-  /**
-   * The `weight` passed to the inner `Text` component.
-   */
-  textWeight?: TextProps['weight']
+	/**
+	 * The `weight` used to apply a `hds-font-weight-` CSS helper class.
+	 */
+	textWeight?: TextProps['weight']
 }

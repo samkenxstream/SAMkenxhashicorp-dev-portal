@@ -1,34 +1,18 @@
-import { ReactElement } from 'react'
-import { GetStaticProps } from 'next'
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
 import nomadData from 'data/nomad.json'
-import installData from 'data/nomad-install.json'
 import { ProductData } from 'types/products'
-import { generateStaticProps, GeneratedProps } from 'lib/fetch-release-data'
-import CoreDevDotLayout from 'layouts/core-dev-dot-layout'
 import ProductDownloadsView from 'views/product-downloads-view'
-import PlaceholderDownloadsView from 'views/placeholder-product-downloads-view'
+import { generateGetStaticProps } from 'views/product-downloads-view/server'
 
-const NomadDownloadsPage = (props: GeneratedProps): ReactElement => {
-  if (__config.flags.enable_new_downloads_view) {
-    const { latestVersion, releases } = props
-    return (
-      <ProductDownloadsView
-        latestVersion={latestVersion}
-        pageContent={installData}
-        releases={releases}
-      />
-    )
-  } else {
-    return <PlaceholderDownloadsView />
-  }
+const NomadDownloadsPage = (props) => {
+	return <ProductDownloadsView {...props} />
 }
 
-export const getStaticProps: GetStaticProps = async () => {
-  const product = nomadData as ProductData
+const getStaticProps = generateGetStaticProps(nomadData as ProductData)
 
-  return generateStaticProps(product)
-}
-
-NomadDownloadsPage.layout = CoreDevDotLayout
-
+export { getStaticProps }
 export default NomadDownloadsPage

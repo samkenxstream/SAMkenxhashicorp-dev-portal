@@ -1,21 +1,15 @@
-import sentinelData from 'data/sentinel.json'
-import { ProductData } from 'types/products'
-import { getStaticGenerationFunctions } from 'layouts/sidebar-sidecar/server'
-import { sentinelUrlAdjuster } from 'layouts/sidebar-sidecar/utils/product-url-adjusters'
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
 import DocsView from 'views/docs-view'
+import { getRootDocsPathGenerationFunctions } from 'views/docs-view/utils/get-root-docs-path-generation-functions'
 
-const basePath = 'intro'
-const basePathForLoader = 'sentinel/intro'
-const baseName = 'Intro'
-const product = sentinelData as ProductData
+const { getStaticPaths, getStaticProps } = getRootDocsPathGenerationFunctions(
+	'sentinel',
+	'intro'
+)
 
-const { getStaticPaths, getStaticProps } = getStaticGenerationFunctions({
-  product,
-  basePath,
-  basePathForLoader,
-  baseName,
-  additionalRemarkPlugins: [sentinelUrlAdjuster],
-})
-
-export { getStaticPaths, getStaticProps }
+export { getStaticProps, getStaticPaths }
 export default DocsView

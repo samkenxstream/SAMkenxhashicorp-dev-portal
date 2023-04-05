@@ -1,5 +1,10 @@
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
 .container {
-  composes: g-grid-container from global;
+	composes: g-grid-container from global;
 }
 
 /*
@@ -7,9 +12,22 @@
  */
 
 .useCases {
-  margin: 60px auto;
+	margin: 60px auto;
 
-  @media (--medium-up) {
-    margin: 120px auto;
-  }
+	@media (--medium-up) {
+		margin: 120px auto;
+	}
+}
+
+/**
+ * Hero
+ */
+
+.heroActionsPrimary {
+	min-width: 140px;
+	color: transparent;
+
+	&.settled {
+		color: var(--brand-text-on-primary);
+	}
 }

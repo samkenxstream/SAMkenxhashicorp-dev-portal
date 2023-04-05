@@ -1,47 +1,45 @@
-import React from 'react'
-import Link, { LinkProps } from 'next/link'
-import InlineSvg from '@hashicorp/react-inline-svg'
-import s from './directional-link-box.module.css'
-
-interface DirectionalLinkBoxProps {
-  link: LinkProps
-  label: string
-  title: string
-  direction: DirectionOption
-}
-
-type DirectionOption = 'next' | 'previous' | 'final'
-
-const IconSrcDict: { [k in DirectionOption]: string } = {
-  next: require(`@hashicorp/flight-icons/svg/arrow-right-16.svg?include`),
-  previous: require(`@hashicorp/flight-icons/svg/arrow-left-16.svg?include`),
-  final: require(`@hashicorp/flight-icons/svg/sliders-24.svg?include`),
-}
-
-/*
- * @TODO style to spec
- * look at the `CardLink` component to use for base styles!
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
  */
 
+import React from 'react'
+import classNames from 'classnames'
+import { IconArrowRight16 } from '@hashicorp/flight-icons/svg-react/arrow-right-16'
+import { IconArrowLeft16 } from '@hashicorp/flight-icons/svg-react/arrow-left-16'
+import { IconSliders16 } from '@hashicorp/flight-icons/svg-react/sliders-16'
+import CardLink from 'components/card-link'
+import Text from 'components/text'
+import { DirectionalLinkBoxProps, DirectionOption } from './types'
+import s from './directional-link-box.module.css'
+
+const IconDict: { [k in DirectionOption]: typeof IconArrowRight16 } = {
+	next: IconArrowRight16,
+	previous: IconArrowLeft16,
+	final: IconSliders16,
+}
+
 function DirectionalLinkBox({
-  link,
-  label,
-  title,
-  direction,
+	href,
+	label,
+	ariaLabel,
+	direction,
 }: DirectionalLinkBoxProps) {
-  return (
-    <Link href={link.href} as={link.as}>
-      <a className={s.linkbox} data-direction={direction}>
-        <span className={s.icon} data-direction={direction}>
-          <InlineSvg src={IconSrcDict[direction]} />
-        </span>
-        <span className={s.text}>
-          <span aria-hidden="true">{label}</span>
-          <span className={s.hidden}>{title}</span>
-        </span>
-      </a>
-    </Link>
-  )
+	const Icon = IconDict[direction]
+
+	return (
+		<CardLink
+			className={classNames(s.linkbox, s[`direction-${direction}`])}
+			href={href}
+			ariaLabel={ariaLabel}
+			data-heap-track={`directional-link-box-${direction}`}
+		>
+			<Icon className={classNames(s.icon, s[`direction-${direction}`])} />
+			<Text className={s.text} asElement="span" size={200} weight="medium">
+				{label}
+			</Text>
+		</CardLink>
+	)
 }
 
 export default DirectionalLinkBox

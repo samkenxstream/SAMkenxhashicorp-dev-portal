@@ -1,100 +1,69 @@
 {
-  "name": "Vagrant",
-  "slug": "vagrant",
-  "algoliaConfig": {
-    "indexName": "product_VAGRANT",
-    "searchOnlyApiKey": "c4c3e690f46940fa3ba9624da4d7fc0c"
-  },
-  "analyticsConfig": {
-    "includedDomains": "vagrantup.com www.vagrantup.com",
-    "segmentWriteKey": "qW11yxgipKMsKFKQUCpTVgQUYftYsJj0"
-  },
-  "metadata": {
-    "title": "Vagrant by HashiCorp",
-    "description": "Vagrant enables users to create and configure lightweight, reproducible, and portable development environments.",
-    "image": "/vagrant/img/og-image.png",
-    "icon": [
-      {
-        "href": "/vagrant/favicon.ico"
-      }
-    ]
-  },
-  "alertBannerActive": false,
-  "alertBanner": {
-    "tag": "Blog post",
-    "url": "https://www.hashicorp.com/blog/a-new-chapter-for-hashicorp",
-    "text": "HashiCorp shares have begun trading on the Nasdaq. Read the blog from our founders, Mitchell Hashimoto and Armon Dadgar.",
-    "linkText": "Read the post",
-    "expirationDate": "2021-12-17T23:00:00-07:00"
-  },
-  "version": "2.2.19",
-  "vmwareUtilityVersion": "1.0.21",
-  "subnavItems": [
-    {
-      "text": "Intro",
-      "url": "/intro",
-      "type": "inbound"
-    },
-    {
-      "text": "Docs",
-      "url": "/docs",
-      "type": "inbound"
-    },
-    {
-      "text": "Community",
-      "url": "/community",
-      "type": "inbound"
-    }
-  ],
-  "basePaths": ["docs", "intro", "vagrant-cloud", "vmware"],
-  "sidebar": {
-    "landingPageNavData": [
-      { "title": "Introduction", "fullPath": "/vagrant/intro" },
-      {
-        "title": "Getting Started",
-        "fullPath": "/vagrant/docs/installation"
-      }
-    ],
-    "resourcesNavData": [
-      { "heading": "Resources" },
-      {
-        "title": "Releases",
-        "href": "https://releases.hashicorp.com/vagrant/"
-      },
-      {
-        "title": "HashiCorp Learn",
-        "href": "https://learn.hashicorp.com/vagrant"
-      },
-      {
-        "title": "Community Forum",
-        "href": "https://discuss.hashicorp.com/c/vagrant/24"
-      },
-      {
-        "title": "Support",
-        "href": "https://support.hashicorp.com"
-      }
-    ]
-  },
-  "navigationHeaderItems": [
-    {
-      "label": "Overview",
-      "path": "/vagrant",
-      "id": "overview"
-    },
-    {
-      "label": "Intro",
-      "path": "/vagrant/intro",
-      "id": "intro"
-    },
-    {
-      "label": "Docs",
-      "path": "/vagrant/docs",
-      "id": "docs"
-    },
-    {
-      "label": "Install",
-      "path": "/vagrant/downloads",
-      "id": "downloads"
-    }
-  ]
+	"name": "Vagrant",
+	"slug": "vagrant",
+	"algoliaConfig": {
+		"indexName": "product_VAGRANT",
+		"searchOnlyApiKey": "c4c3e690f46940fa3ba9624da4d7fc0c"
+	},
+	"analyticsConfig": {
+		"includedDomains": "vagrantup.com www.vagrantup.com",
+		"segmentWriteKey": "wFMyBE4PJCZttWfu0pNhYdWr7ygW0io4"
+	},
+	"datoToken": "88b4984480dad56295a8aadae6caad",
+	"metadata": {
+		"title": "Vagrant by HashiCorp",
+		"description": "Vagrant enables users to create and configure lightweight, reproducible, and portable development environments.",
+		"image": "https://www.vagrantup.com/vagrant/img/og-image.png",
+		"icon": [
+			{
+				"href": "/vagrant-public/favicon.ico"
+			}
+		]
+	},
+	"alertBannerActive": true,
+	"alertBanner": {
+		"tag": "HashiConf",
+		"url": "https://hashiconf.com/2023?utm_source=direct&utm_medium=banner&utm_campaign=23Q3_HASHICONFGLOBAL_EVENT&utm_content=&utm_offer=event",
+		"text": "Our community conference is taking place in San Francisco and online October 10-12.",
+		"linkText": "Register now",
+		"expirationDate": ""
+	},
+	"version": "2.2.19",
+	"vmwareUtilityVersion": "1.0.21",
+	"subnavItems": [
+		{
+			"text": "Intro",
+			"url": "https://developer.hashicorp.com/vagrant/intro",
+			"type": "inbound"
+		},
+		{
+			"text": "Docs",
+			"url": "https://developer.hashicorp.com/vagrant/docs",
+			"type": "inbound"
+		},
+		{
+			"text": "Community",
+			"url": "/community",
+			"type": "inbound"
+		}
+	],
+	"basePaths": ["docs", "intro", "vagrant-cloud", "vmware", "downloads"],
+	"rootDocsPaths": [
+		{
+			"iconName": "docs",
+			"name": "Documentation",
+			"path": "docs"
+		},
+		{
+			"iconName": "entry-point",
+			"name": "Intro",
+			"path": "intro",
+			"addOverviewItem": false
+		},
+		{
+			"iconName": "cloud",
+			"name": "Vagrant Cloud",
+			"path": "vagrant-cloud"
+		}
+	]
 }

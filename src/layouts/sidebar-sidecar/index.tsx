@@ -1,82 +1,129 @@
-import { FC, ReactElement } from 'react'
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+// Third-party imports
+import { useRef } from 'react'
+import classNames from 'classnames'
+
+// Global imports
+import { MAIN_ELEMENT_ID } from 'constants/element-ids'
+import getFullNavHeaderHeight from 'lib/get-full-nav-header-height'
+import useOnFocusOutside from 'hooks/use-on-focus-outside'
+import { useScroll } from 'framer-motion'
+import { useMobileMenu } from 'contexts'
 import BaseLayout from 'layouts/base-new'
-import TableOfContents from 'layouts/sidebar-sidecar/components/table-of-contents'
 import BreadcrumbBar from 'components/breadcrumb-bar'
-import DevDotContent from 'components/dev-dot-content'
 import EditOnGithubLink from 'components/edit-on-github-link'
-import Footer from 'components/footer'
+import MobileMenuContainer, {
+	MobileAuthenticationControls,
+} from 'components/mobile-menu-container'
 import Sidebar from 'components/sidebar'
+
+// Local imports
 import { SidebarSidecarLayoutProps } from './types'
+import {
+	SidebarNavDataProvider,
+	useSidebarNavData,
+} from './contexts/sidebar-nav-data'
+import { ScrollProgressBar, SidecarScrollContainer } from './components'
 import s from './sidebar-sidecar-layout.module.css'
 
-const SidebarSidecarLayout: FC<SidebarSidecarLayoutProps> = ({
-  breadcrumbLinks,
-  children,
-  githubFileUrl,
-  headings,
-  openConsentManager,
-  sidebarProps,
-  sidebarSlot,
-  sidecarSlot,
-}) => {
-  const SidebarContent = (): ReactElement => {
-    if (sidebarSlot) {
-      return sidebarSlot
-    }
+const SidebarSidecarLayout = (props: SidebarSidecarLayoutProps) => {
+	const navDataLevels = props.sidebarNavDataLevels
+	return (
+		<BaseLayout showFooterTopBorder>
+			<SidebarNavDataProvider navDataLevels={navDataLevels}>
+				<SidebarSidecarLayoutContent {...props} />
+			</SidebarNavDataProvider>
+		</BaseLayout>
+	)
+}
 
-    return (
-      <Sidebar
-        backToLinkProps={sidebarProps.backToLinkProps}
-        menuItems={sidebarProps.menuItems}
-        showFilterInput={sidebarProps.showFilterInput}
-        title={sidebarProps.title}
-      />
-    )
-  }
+const SidebarSidecarLayoutContent = ({
+	breadcrumbLinks,
+	children,
+	githubFileUrl,
+	AlternateSidebar,
+	showScrollProgress,
+	sidecarSlot,
+	sidebarNavDataLevels,
+	mainWidth = 'wide',
+	alertBannerSlot,
+}: SidebarSidecarLayoutProps) => {
+	const { isMobileMenuRendered, mobileMenuIsOpen, setMobileMenuIsOpen } =
+		useMobileMenu()
+	const { currentLevel } = useSidebarNavData()
+	const sidebarRef = useRef<HTMLDivElement>()
+	const sidebarProps = sidebarNavDataLevels[currentLevel]
+	const sidebarIsVisible = !isMobileMenuRendered || mobileMenuIsOpen
+	const contentRef = useRef(null)
 
-  const SidecarContent = (): ReactElement => {
-    if (sidecarSlot) {
-      return sidecarSlot
-    }
+	const stickyNavHeaderHeight = getFullNavHeaderHeight()
+	const { scrollYProgress } = useScroll({
+		target: contentRef,
+		/**
+		 * Note: sticky elements are not registered during scroll, so we need
+		 * to account for the stick nav height with an offset to ensure accuracy.
+		 */
+		offset: [`${stickyNavHeaderHeight * -1}px start`, `end end`],
+	})
 
-    return (
-      <TableOfContents
-        headings={headings.filter((heading) => heading.level <= 2)}
-      />
-    )
-  }
+	// Handles closing the sidebar if focus moves outside of it and it is open.
+	useOnFocusOutside(
+		[sidebarRef],
+		() => setMobileMenuIsOpen(false),
+		isMobileMenuRendered && sidebarIsVisible
+	)
 
-  return (
-    <BaseLayout showFooter={false}>
-      <div className={s.contentWrapper}>
-        <div className={s.sidebar}>
-          <SidebarContent />
-        </div>
-        <div className={s.mainArea}>
-          <div className={s.main}>
-            <main id="main">
-              {breadcrumbLinks && <BreadcrumbBar links={breadcrumbLinks} />}
-              <DevDotContent>{children}</DevDotContent>
-              {githubFileUrl && (
-                <EditOnGithubLink
-                  className={s.editOnGithubLink}
-                  url={githubFileUrl}
-                  label="Edit this page on GitHub"
-                />
-              )}
-            </main>
-            <Footer
-              className={s.footer}
-              openConsentManager={openConsentManager}
-            />
-          </div>
-          <div className={`${s.sidecar} g-hide-on-mobile g-hide-on-tablet`}>
-            <SidecarContent />
-          </div>
-        </div>
-      </div>
-    </BaseLayout>
-  )
+	let sidebarContent = null
+	if (AlternateSidebar && !sidebarProps?.menuItems) {
+		sidebarContent = <AlternateSidebar {...sidebarProps} />
+	} else {
+		sidebarContent = <Sidebar {...sidebarProps} />
+	}
+
+	return (
+		<div className={classNames(s.root, s[`mainWidth-${mainWidth}`])}>
+			<MobileMenuContainer className={s.sidebarContainer} ref={sidebarRef}>
+				<div className={s.sidebarContentWrapper}>
+					<MobileAuthenticationControls />
+					{sidebarContent}
+				</div>
+			</MobileMenuContainer>
+			<div className={s.contentWrapper} ref={contentRef}>
+				{alertBannerSlot}
+				<div className={s.paddedAreaWrapper}>
+					<div className={s.breadcrumbContainer}>
+						<div className={s.breadcrumbMaxWidth}>
+							{breadcrumbLinks ? (
+								<BreadcrumbBar links={breadcrumbLinks} />
+							) : null}
+						</div>
+					</div>
+					<div className={s.mainAndSidecar}>
+						<main id={MAIN_ELEMENT_ID} className={s.main}>
+							{children}
+							{githubFileUrl ? (
+								<EditOnGithubLink
+									className={s.editOnGithubLink}
+									url={githubFileUrl}
+									label="Edit this page on GitHub"
+								/>
+							) : null}
+						</main>
+						<div className={s.sidecarPosition}>
+							<SidecarScrollContainer>{sidecarSlot}</SidecarScrollContainer>
+						</div>
+					</div>
+				</div>
+				{showScrollProgress ? (
+					<ScrollProgressBar progress={scrollYProgress} />
+				) : null}
+			</div>
+		</div>
+	)
 }
 
 export type { SidebarSidecarLayoutProps }

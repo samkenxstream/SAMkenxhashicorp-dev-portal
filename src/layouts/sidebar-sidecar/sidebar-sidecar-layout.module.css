@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
 /*
 NOTE:
 Relies on `--sticky-bars-height` being set,
@@ -6,77 +11,161 @@ See comment in src/layouts/base-new/base-new-layout.module.css
 for further details.
 */
 
-.contentWrapper {
-  display: flex;
+.root {
+	display: flex;
+	flex-grow: 1;
 
-  /* flex-grow ensures the content fills available
-  space in BaseNewLayout */
-  flex-grow: 1;
-
-  /* For a coherent visual effect, the top padding value
+	/* For a coherent visual effect, the top padding value
   must be used for sticky positioning in addition to
   padding the content area. So, we create a CSS var
   to make it reusable and express this intent. */
-  --main-area-top-padding: 32px;
+	--main-area-padding-top: 32px;
+
+	/* Sidecar width and spacing are declared at this level to allow
+	   our breadcrumbBarGroup to match the max-width of main + sidecar. */
+	&.mainWidth-wide {
+		--main-element-max-width: 896px;
+	}
+
+	&.mainWidth-narrow {
+		--main-element-max-width: 680px;
+	}
+
+	/* Sidecar width and spacing are declared at this level to allow
+	   our breadcrumbBarGroup to match the max-width of main + sidecar. */
+	--sidecar-width: 312px;
+	--sidecar-spacing: 48px;
+
+	@media (min-width: 1440px) {
+		--sidecar-spacing: 64px;
+	}
 }
 
-.sidebar {
-  background-color: white;
-  box-shadow: 0 2px 3px rgba(101, 106, 118, 0.1),
-    0 12px 28px rgba(101, 106, 118, 0.25);
-  flex-shrink: 0;
+/**
+ * Sidebar area
+ */
 
-  /* Sidebar should occupy the full available screen height.
-  We have sticky nav bars, so the full height is equal to
-  100vh minus the combined height of the sticky nav bars. */
-  max-height: calc(100vh - var(--sticky-bars-height));
-  overflow-y: auto;
-  padding: 24px;
-  position: sticky;
-  top: var(--sticky-bars-height);
-  width: 320px;
-
-  /* z-index is necessary here to prevent any absolutely
-  positioned elements in the main area, namely the footer's
-  top-border, from overlapping the sidebar */
-  z-index: 1;
+/* Note: these styles are *added* to components/mobile-menu-container,
+    that component handles some layout concerns such as max height. */
+.sidebarContainer {
+	@media (--dev-dot-hide-mobile-menu) {
+		display: flex !important; /* always want this value on desktop here */
+		left: 0 !important; /* always want this value on desktop here */
+		position: sticky; /* fixed does not take up horiz. space the same */
+		width: var(--dev-dot-sidebar-width); /* custom width overwrite */
+	}
 }
 
-.mainArea {
-  display: flex;
-  flex-grow: 1;
-  min-width: 0;
-  justify-content: center;
-  padding-bottom: 32px;
-  padding-top: var(--main-area-top-padding);
-  padding-left: 24px;
-  padding-right: 24px;
+/* Pad content and create a scrollable area within .sidebarContainer. */
+.sidebarContentWrapper {
+	flex-shrink: 1;
+	flex-grow: 1;
+	overflow-y: auto;
+	padding-bottom: 48px;
+	padding-left: 16px;
+	padding-right: 16px;
+	padding-top: 24px;
+	position: relative;
 }
 
+/**
+ * Main area
+ */
+
+/* .contentWrapper establishes the area next to the sidebar. */
+.contentWrapper {
+	width: 100%;
+
+	@media (--dev-dot-hide-mobile-menu) {
+		/* 100vw - 100% is the scrollbar width */
+		max-width: calc(100vw - (100vw - 100%) - var(--dev-dot-sidebar-width));
+	}
+}
+
+/* .paddedAreaWrapper establishes a padded area within the contentWrapper.
+    Note that `alertBannerSlot` renders outside this area, without padding. */
+.paddedAreaWrapper {
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+	min-height: calc(100vh - var(--navigation-header-height));
+	padding-bottom: 128px;
+	padding-left: 24px;
+	padding-right: 24px;
+	padding-top: var(--main-area-padding-top);
+
+	@media (--dev-dot-sidecar-up) {
+		padding-left: 48px;
+		padding-right: 16px;
+	}
+}
+
+/* .breadcrumbContainer establishes an area that spans the padded area.
+   We need to align its width with the main+sidecar area below it,
+	 to prevent very long breadcrumbs from causing maxWidthWrapper to grow
+	 beyond our desired max-width. */
+.breadcrumbContainer {
+	display: flex;
+	justify-content: flex-start;
+	margin-bottom: 32px;
+	max-width: calc(
+		var(--main-element-max-width) + var(--sidecar-spacing) +
+			var(--sidecar-width)
+	);
+	width: 100%;
+}
+
+/* We want to limit the breadcrumb row content to be the width
+   of the main content area only. */
+.breadcrumbMaxWidth {
+	max-width: var(--main-element-max-width);
+}
+
+/* .mainAndSidecar spans the padded area, and lays out main + sidecar. */
+.mainAndSidecar {
+	display: flex;
+	max-width: calc(
+		var(--main-element-max-width) + var(--sidecar-spacing) +
+			var(--sidecar-width)
+	);
+	width: 100%;
+}
+
+/* .main handles the max-width and sizing for the main area. */
 .main {
-  align-self: flex-start;
-  flex-grow: 1;
-  min-width: 0;
-  max-width: 804px;
-  padding-left: 24px;
-  padding-right: 24px;
+	max-width: var(--main-element-max-width);
+	min-width: 0;
+	width: 100%;
 }
 
+/* .sidecarPosition handles the positioning of the sidecar slot.
+   Scroll styles are handled in sidecar-scroll-container. */
+.sidecarPosition {
+	--sidecar-position-top: calc(
+		var(--sticky-bars-height) + var(--main-area-padding-top)
+	);
+	--sidecar-viewport-bottom-spacing: 24px;
+	--max-sidecar-height: calc(
+		100vh - var(--sidecar-position-top) - var(--sidecar-viewport-bottom-spacing)
+	);
+
+	display: none;
+
+	@media (--dev-dot-sidecar-up) {
+		display: flex;
+		flex-direction: column;
+		flex-shrink: 0;
+		height: min-content;
+		margin-left: var(--sidecar-spacing);
+		position: sticky;
+		top: var(--sidecar-position-top);
+		width: var(--sidecar-width);
+	}
+}
+
+/* .editOnGithubLink is an element within the `.main` area.
+   It only applies to docs layouts, so could perhaps be removed from
+	 SidebarSidecarLayout and rendered as part of `children` instead. */
 .editOnGithubLink {
-  margin-top: 64px;
-}
-
-.footer {
-  /* the 50vh margin-top on footer ensures that all
-  jump-nav items have room to be jumped to */
-  margin-top: 50vh;
-}
-
-.sidecar {
-  align-self: flex-start;
-  flex-shrink: 0;
-  margin-left: 24px;
-  position: sticky;
-  top: calc(var(--sticky-bars-height) + var(--main-area-top-padding));
-  width: 220px;
+	margin-top: 64px;
 }

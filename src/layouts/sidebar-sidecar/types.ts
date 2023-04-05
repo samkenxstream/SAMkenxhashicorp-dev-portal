@@ -1,54 +1,30 @@
-import { ReactElement } from 'react'
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+import { ReactElement, ReactNode } from 'react'
+import { VersionSelectItem } from '@hashicorp/react-docs-page/server/loaders/remote-content'
 import { BreadcrumbLink } from 'components/breadcrumb-bar'
 import { SidebarProps } from 'components/sidebar'
-import { TableOfContentsHeading } from 'layouts/sidebar-sidecar/components/table-of-contents'
 
-/**
- * `BaseProps` represents the props that are defined for every usage of
- * `SidebarSidecarLayout`.
- */
-interface BaseProps {
-  breadcrumbLinks?: BreadcrumbLink[]
-  children: React.ReactNode
-  githubFileUrl?: string
-  openConsentManager?: () => void
+export interface SidebarSidecarLayoutProps {
+	breadcrumbLinks?: BreadcrumbLink[]
+	children: ReactNode
+	githubFileUrl?: string
+	sidebarNavDataLevels: SidebarProps[]
+	/** @TODO determine the minimum set of props that all Sidebars should have */
+	AlternateSidebar?: (props: any) => ReactElement
+	versions?: VersionSelectItem[]
+	showScrollProgress?: boolean
+	mainWidth?: 'wide' | 'narrow'
+	/**
+	 * Optionally render content into the sidecar area.
+	 * If omitted, blank space will be shown in the sidecar area.
+	 */
+	sidecarSlot?: ReactNode
+	/**
+	 * Optionally render an alert banner before the main content area.
+	 */
+	alertBannerSlot?: React.ReactNode
 }
-
-/**
- * `PropsForSidebar` defines the properties that represent `Sidebar` behavior.
- * This approach allows us to require either (not both) `sidebarProps` and
- * `sidebarSlot` since providing both of these props is not a case that this
- * component handles.
- */
-type PropsForSidebar =
-  | {
-      sidebarProps: SidebarProps
-      sidebarSlot?: never
-    }
-  | {
-      sidebarProps?: never
-      sidebarSlot: ReactElement
-    }
-
-/**
- * `PropsForSidecar` defines the properties that represent `Sidecar` behavior.
- * This approach allows us to require either (not both) `headings` and
- * `sidecarSlot` since providing both of these props is not a case that this
- * component handles.
- */
-type PropsForSidecar =
-  | {
-      headings: TableOfContentsHeading[]
-      sidecarSlot?: never
-    }
-  | {
-      headings?: never
-      sidecarSlot: ReactElement
-    }
-
-/**
- * This is the final exported type, combining all types defined above into one.
- */
-export type SidebarSidecarLayoutProps = BaseProps &
-  PropsForSidebar &
-  PropsForSidecar

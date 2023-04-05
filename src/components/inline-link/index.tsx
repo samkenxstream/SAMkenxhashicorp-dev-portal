@@ -1,26 +1,34 @@
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
 import { ReactElement } from 'react'
 import classNames from 'classnames'
-import MaybeInternalLink from 'components/maybe-internal-link'
-import Text from 'components/text'
+import Link from 'components/link'
 import { InlineLinkProps } from './types'
 import s from './inline-link.module.css'
 
 const InlineLink = ({
-  className,
-  href,
-  text,
-  textSize,
-  textWeight,
+	children,
+	className,
+	href,
+	textSize = 300,
+	textWeight = 'regular',
+	...rest
 }: InlineLinkProps): ReactElement => {
-  const classes = classNames(s.root, className)
+	const classes = classNames(
+		s.root,
+		`hds-typography-body-${textSize}`,
+		`hds-font-weight-${textWeight}`,
+		className
+	)
 
-  return (
-    <MaybeInternalLink className={classes} href={href}>
-      <Text asElement="span" size={textSize} weight={textWeight}>
-        {text}
-      </Text>
-    </MaybeInternalLink>
-  )
+	return (
+		<Link {...rest} className={classes} href={href}>
+			{children}
+		</Link>
+	)
 }
 
 export type { InlineLinkProps }

@@ -1,75 +1,88 @@
-/* eslint-disable react/no-array-index-key */
-import React, { ReactElement } from 'react'
-import slugify from 'slugify'
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
+import { ReactElement } from 'react'
 import SidebarSidecarLayout from 'layouts/sidebar-sidecar'
-import Heading, { HeadingProps } from 'components/heading'
-import Text from 'components/text'
-import GetStarted, { GetStartedProps } from './components/get-started'
-import Cards, { CardProps } from './components/cards'
+import { OutlineNavWithActive } from 'components/outline-nav/components'
+import { TryHcpCalloutPrebuilt } from 'components/try-hcp-callout'
+import { hasHcpCalloutContent } from 'components/try-hcp-callout/content'
+import CalloutCard from 'components/callout-card'
+import IconCardLinkGridList from 'components/icon-card-link-grid-list'
+import { developmentToast, ToastColor } from 'components/toast'
+import { ProductLandingViewProps } from './types'
+import { getIconCards } from './helpers'
+import HeroHeadingVisual from './components/hero-heading-visual'
+import OverviewCta from './components/overview-cta'
+import ProductLandingBlocks from './components/product-landing-blocks'
 import s from './product-landing.module.css'
 
-type Block =
-  | ({ type: 'heading' } & HeadingProps & { heading: string })
-  | ({ type: 'get_started' } & GetStartedProps)
-  | ({ type: 'cards' } & CardProps)
+function ProductLandingView({
+	content,
+	product,
+	layoutProps,
+	outlineItems,
+}: ProductLandingViewProps): ReactElement {
+	const { hero, overview, overviewParagraph, get_started, blocks } = content
+	const iconCards = getIconCards(product)
 
-interface ProductLandingProps {
-  content: {
-    heading: string
-    subheading: string
-    blocks: Block[]
-  }
+	if (overview.cta && overviewParagraph) {
+		developmentToast({
+			color: ToastColor.critical,
+			title: 'Error in ProductLandingView',
+			description:
+				'Both overview `cta` and `overviewParagraph` were passed to ProductLandingView. Only provide one.',
+		})
+	}
+
+	return (
+		<SidebarSidecarLayout
+			{...layoutProps}
+			sidecarSlot={<OutlineNavWithActive items={outlineItems} />}
+		>
+			<div className={s.heroMargin}>
+				<HeroHeadingVisual
+					heading={hero.heading}
+					image={hero.image}
+					productSlug={hero.productSlug}
+				/>
+			</div>
+			{iconCards ? (
+				<div className={s.iconCardsMargin}>
+					<IconCardLinkGridList cards={iconCards} productSlug={product.slug} />
+				</div>
+			) : null}
+			<div className={s.overviewCtaMargin}>
+				<OverviewCta
+					heading={overview.heading}
+					headingSlug={overview.headingSlug}
+					body={overview.body}
+					cta={overview.cta}
+					image={overview.image}
+				/>
+				{overviewParagraph ? (
+					<p className={s.overviewParagraph}>{overviewParagraph}</p>
+				) : null}
+			</div>
+			<div className={s.getStartedMargin}>
+				<CalloutCard
+					heading={get_started.heading}
+					headingSlug={get_started.headingSlug}
+					body={get_started.body}
+					ctas={get_started.ctas}
+					iconCardLinks={get_started.iconCardLinks}
+					fixedColumns={get_started.fixedColumns}
+				/>
+			</div>
+			{hasHcpCalloutContent(product.slug) ? (
+				<div className={s.tryHcpCalloutMargin}>
+					<TryHcpCalloutPrebuilt productSlug={product.slug} />
+				</div>
+			) : null}
+			<ProductLandingBlocks blocks={blocks} />
+		</SidebarSidecarLayout>
+	)
 }
 
-function ProductLandingView({ content }: ProductLandingProps): ReactElement {
-  return (
-    <>
-      <Heading
-        className={s.pageHeading}
-        size={500}
-        level={1}
-        slug={slugify(content.heading)}
-        weight="bold"
-      >
-        {content.heading}
-      </Heading>
-      {content.subheading && (
-        <Text className={s.pageSubheading}>{content.subheading}</Text>
-      )}
-      {content.blocks.map((block, idx) => {
-        const { type } = block
-        if (type === 'heading') {
-          const { heading, slug, level, size } = block
-          return (
-            <Heading
-              className={s[`h${level}`]}
-              key={idx}
-              weight="bold"
-              {...{ slug, level, size }}
-            >
-              {heading}
-            </Heading>
-          )
-        } else if (type === 'get_started') {
-          const { heading, product, text, link } = block
-          return <GetStarted key={idx} {...{ product, heading, text, link }} />
-        } else if (type === 'cards') {
-          const { columns, cards } = block
-          return <Cards key={idx} {...{ columns, cards }} />
-        }
-        // If we don't have a recognized card type,
-        // return a dev-oriented debug view of the block data
-        // TODO: remove this for production, this is here
-        // TODO: temporarily as we work through demo-oriented implementation
-        return (
-          <pre key={idx} style={{ border: '1px solid red' }}>
-            <code>{JSON.stringify({ type, block }, null, 2)}</code>
-          </pre>
-        )
-      })}
-    </>
-  )
-}
-
-ProductLandingView.layout = SidebarSidecarLayout
 export default ProductLandingView

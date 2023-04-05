@@ -1,18 +1,23 @@
-import { ReactNode } from 'react'
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
+ */
 
-export interface CardLinkProps {
-  /**
-   * The element(s) to render within the `CardLink` body.
-   */
-  children: ReactNode
+import { CardProps } from 'components/card'
+import { LinkProps } from 'components/link'
 
-  /**
-   * A string of one or more classnames passed to the inner `Card` component.
-   */
-  className?: string
+type InheritedCardProps = Pick<CardProps, 'children' | 'className'>
+type InheritedLinkProps = Pick<LinkProps, 'href' | 'opensInNewTab'>
 
-  /**
-   * The destination of the link.
-   */
-  href: string
+export interface CardLinkProps extends InheritedCardProps, InheritedLinkProps {
+	/**
+	 * The text used as the `CardLink`'s accessible label. Required so the element
+	 * is announced by screen readers.
+	 */
+	ariaLabel: LinkProps['aria-label']
+
+	/**
+	 * An optional data-heap-track string to place on the `<a />` element.
+	 */
+	'data-heap-track'?: string
 }

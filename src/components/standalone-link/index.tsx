@@ -1,40 +1,48 @@
+/**
+ * Copyright (c) HashiCorp, Inc.
+ * SPDX-License-Identifier: MPL-2.0
+ */
+
 import { ReactElement } from 'react'
 import classNames from 'classnames'
-import MaybeInternalLink from 'components/maybe-internal-link'
-import Text from 'components/text'
+import Link from 'components/link'
 import { StandaloneLinkProps } from './types'
 import s from './standalone-link.module.css'
 
 const StandaloneLink = ({
-  ariaLabel,
-  className,
-  color = 'primary',
-  download,
-  href,
-  icon,
-  iconPosition,
-  openInNewTab = false,
-  text,
-  textSize,
+	ariaLabel,
+	className,
+	color = 'primary',
+	'data-heap-track': dataHeapTrack,
+	download,
+	href,
+	icon,
+	iconPosition,
+	onClick,
+	opensInNewTab = false,
+	size = 'medium',
+	text,
+	textClassName,
 }: StandaloneLinkProps): ReactElement => {
-  const classes = classNames(s.root, s[`color-${color}`], className)
+	const classes = classNames(s.root, s[`color-${color}`], s[size], className)
+	const rel = opensInNewTab ? 'noreferrer noopener' : undefined
 
-  return (
-    <MaybeInternalLink
-      aria-label={ariaLabel}
-      className={classes}
-      download={download}
-      href={href}
-      target={openInNewTab ? '_blank' : '_self'}
-      rel={openInNewTab ? 'noreferrer noopener' : undefined}
-    >
-      {iconPosition === 'leading' && icon}
-      <Text asElement="span" className={s.text} size={textSize} weight="medium">
-        {text}
-      </Text>
-      {iconPosition === 'trailing' && icon}
-    </MaybeInternalLink>
-  )
+	return (
+		<Link
+			aria-label={ariaLabel}
+			className={classes}
+			data-heap-track={`standalone-link ${dataHeapTrack ?? ''}`}
+			download={download}
+			href={href}
+			onClick={onClick}
+			rel={rel}
+			opensInNewTab={opensInNewTab}
+		>
+			{iconPosition === 'leading' && icon}
+			<span className={classNames(s.text, textClassName)}>{text}</span>
+			{iconPosition === 'trailing' && icon}
+		</Link>
+	)
 }
 
 export type { StandaloneLinkProps }

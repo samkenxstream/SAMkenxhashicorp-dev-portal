@@ -1,18 +1,22 @@
 {
-  "io_sites": {
-    "max_static_paths": 9999,
-    "revalidate": 360
-  },
-  "dev_dot": {
-    "max_static_paths": 10,
-    "revalidate": 360,
-    "content_preview_branch": "dev-portal",
-    "products_with_content_preview_branch": ["waypoint", "vault"]
-  },
-  "learn": {
-    "max_static_paths": 10
-  },
-  "flags": {
-    "enable_new_downloads_view": true
-  }
+	"extends": "base",
+	"io_sites": {
+		"max_static_paths": 9999
+	},
+	"dev_dot": {
+		"max_static_paths": 50,
+		"beta_product_slugs": [],
+		"datadog_config": {
+			"applicationId": "4486817b-44b8-4e6c-b6a4-cef83e48cf46",
+			"clientToken": "pub750ceadc5a9c79a6d3da59b534eb5108",
+			"service": "developer.hashicorp.com"
+		},
+		"auth": {
+			"idp_url": "https://auth.idp.hashicorp.com"
+		},
+		"product_slugs_with_integrations": ["vault", "waypoint"]
+	},
+	"flags": {
+		"enable_dark_mode": false
+	}
 }
